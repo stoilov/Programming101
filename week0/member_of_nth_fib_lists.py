@@ -1,5 +1,3 @@
-# I didn't get the task, so this does not work.
-
 from nth_fib_lists import nth_fib_lists
 from list_to_number import list_to_number
 
