@@ -2,16 +2,22 @@
 import sys
 from time import time
 from datetime import datetime
+import os.path
 
 persons = []
 prices = []
 time_stamps = []
-saved_files = []
-list_used = False
+used_commands = []
+files_to_save = []
+if os.path.exists("saved_files"):
+	file = open("saved_files", "r")
+	files_to_save = file.read().split("\n")
+	file.close()
 
 def take(name, price):
 	msg = "Taking order from {} for {}".format(name, price)
 	if name in persons:
+		prices[persons.index(name)] = float(prices[persons.index(name)])
 		prices[persons.index(name)] += price
 
 	else:
@@ -32,6 +38,7 @@ def save():
 	ts = time()
 	stamp = datetime.fromtimestamp(ts).strftime('%Y_%m_%d_%H_%M_%S')
 	stamp = "orders_" + stamp
+	files_to_save.append(stamp)
 	save_data = []
 	for i, k in enumerate(persons):
 		save_data.append("{} - {}".format(persons[i], prices[i]))
@@ -39,7 +46,9 @@ def save():
 	file = open(stamp, "w")
 	file.write("\n".join(save_data))
 	file.close()
-	saved_files.append(stamp)
+	file = open("saved_files", "w")
+	file.write("\n".join(files_to_save))
+	file.close()
 	del persons[:]
 	del prices[:]
 
@@ -47,43 +56,65 @@ def save():
 	main()
 
 def list_files():
-	list_used = True
-	for number, filename in enumerate(saved_files):
-		msg = "[{}] - {}".format(number + 1, filename)
+	if os.path.exists("saved_files"):
+		file = open("saved_files", "r")
+		saved_files = file.read().split("\n")
+		file.close()
+	else:
+		saved_files = []
+
+	for i, saved in enumerate(saved_files):
+		msg = "[{}] - {}".format(i + 1, saved)
 		print(msg)
 
 	main()
 
 def load(order_number):
-	#not fully functional
+	file = open("saved_files", "r")
+	saved_files = file.read().split("\n")
+	file.close()
 	order_number -= 1
-	if len(persons) == 0:
+	if "list" not in used_commands:
+		print("Use list command before loading")
+		main()
+
+	if used_commands[len(used_commands) - 2] == "load":
+		del persons[:]
+		del prices[:]
+
+	if len(persons) > 0:
+		print("You have not saved the current order.\nIf you wish to discard it, type load <number> again.")
+		main()
+	
+	else:
 		file = open(saved_files[order_number], "r")
-		for line in file:
+		load_order_from_file = file.read().split("\n")
+		for line in load_order_from_file:
 			order_load = line.split(" - ")
 			persons.append(order_load[0])
 			prices.append(order_load[1])
 
 		file.close()
-	else:
-		print("You have not saved the current order.\nIf you wish to discard it, type load <number> again.")
-		main()
-
-	if not list_used:
-		print("Use list command before loading")
 		main()
 
 
 
 def finish():
-	#not fully functional
+	if used_commands[len(used_commands) - 2] == "finish":
+		del persons[:]
+		del prices[:]
+
 	if len(persons) > 0:
 		print("You have not saved your order.\nIf you wish to continue, type finish again.\nIf you want to save your order, type save")
+		main()
+	else:
+		print("Finishing order. Goodbye!")
 
 
 def main():
 	command = input("Enter command>")
 	command = command.split(" ")
+	used_commands.append(command[0])
 
 	if command[0] == "take":
 		command[2] = float(command[2])
