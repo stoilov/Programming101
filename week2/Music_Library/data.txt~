@@ -1,0 +1,13 @@
+{
+    "songs": [
+        {
+            "album": "Led Zeppelin II",
+            "bitrate": 320,
+            "rating": 5,
+            "length": 334,
+            "title": "Whole Lotta Love",
+            "artist": "Led Zeppelin"
+        }
+    ],
+    "name": "LZ"
+}
