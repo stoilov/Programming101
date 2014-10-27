@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-Programming101
-==============
-=======
 # Programming101 v2
 
     ______                                              _               __  _____  __  
@@ -54,4 +50,4 @@ We are going to work with a console & text editor a lot. Linux is a mandatory op
 * Solving team problems, using Git, Python's OOP and TDD
 * Introducing to basic security concepts - SQL injections, hash functions & password hashing, bruteforce protection.
 * Introducing Python's `SQLAlchemy` ORM - working with more complex database problems.
->>>>>>> 47aba86b92694df6c87b3b0d3b58d282282e4306
+
