@@ -33,7 +33,7 @@ class Math:
     def is_divisible(self, furst_number, second_number, operation):
         if furst_number % second_number == 0 and operation == Math.DIVISION:
             return True
-        elif operation != Math.DIVISION:
+        if operation != Math.DIVISION:
             return True
         return False
 
@@ -71,9 +71,9 @@ class Math:
         score_info = self.get_score()
         if score_info["has_played"] is True and score_info["player_score"] < score:
             self.session.query(Score).filter(Score.player == self.player).update({"score": score})
-            update("score_board").values(score=score).where(Score.player == self.player)
+            # update("score_board").values(score=score).where(Score.player == self.player)
             self.session.commit()
-        elif score_info["has_played"] is False:
+        if score_info["has_played"] is False:
             score_object = Score(player=self.player, score=score)
             self.session.add(score_object)
             self.session.commit()
