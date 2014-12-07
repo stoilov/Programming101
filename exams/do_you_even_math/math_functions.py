@@ -71,7 +71,6 @@ class Math:
         score_info = self.get_score()
         if score_info["has_played"] is True and score_info["player_score"] < score:
             self.session.query(Score).filter(Score.player == self.player).update({"score": score})
-            # update("score_board").values(score=score).where(Score.player == self.player)
             self.session.commit()
         if score_info["has_played"] is False:
             score_object = Score(player=self.player, score=score)
