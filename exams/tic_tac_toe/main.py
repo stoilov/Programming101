@@ -4,6 +4,7 @@ import copy
 class Board:
     PLAYER = "O"
     AI = "X"
+    ROW_LEN = 3
     grid_str = " {} | {} | {} \n___|___|___\n {} | {} | {}\n___|___|___\n {} | {} | {}\n   |   |   \n"
 
     def __init__(self):
@@ -52,20 +53,20 @@ class Board:
 
     def game_win(self, grid, participant):
         for row in grid:
-            if row.count(participant) == 3:
+            if row.count(participant) == Board.ROW_LEN:
                 return True
 
-        transposed = [[row[i] for row in grid] for i in range(3)]
+        transposed = [[row[i] for row in grid] for i in range(Board.ROW_LEN)]
         for row in transposed:
-            if row.count(participant) == 3:
+            if row.count(participant) == Board.ROW_LEN:
                 return True
 
-        main_diagonal = [grid[row][row] for row in range(3)]
-        if main_diagonal.count(participant) == 3:
+        main_diagonal = [grid[row][row] for row in range(Board.ROW_LEN)]
+        if main_diagonal.count(participant) == Board.ROW_LEN:
                 return True
 
-        other_diagonal = [grid[row][2 - row] for row in range(3)]
-        if other_diagonal.count(participant) == 3:
+        other_diagonal = [grid[row][2 - row] for row in range(Board.ROW_LEN)]
+        if other_diagonal.count(participant) == Board.ROW_LEN:
                 return True
         return False
 
@@ -78,27 +79,36 @@ class Board:
             return 0
 
     def is_game_over(self):
-        grid_elements = [row[i] for row in self.grid for i in [0, 1, 2]]
+        grid_elements = [row[i] for row in self.grid for i in range(Board.ROW_LEN)]
         if " " in grid_elements:
             return False
         return True
 
     def make_player_turn(self):
-        row = int(input("Select row: "))
-        col = int(input("Select col: "))
-        return row, col
+        while True:
+            try:
+                row = int(input("Select row: "))
+                col = int(input("Select col: "))
+                break
+            except Exception:
+                print("Only integer values are accepted.")
+
+        return row-1, col-1
 
 
 def main():
     board = Board()
+    grid_print_list = [row[i] for row in board.grid for i in range(Board.ROW_LEN)]
+    print(Board.grid_str.format(*grid_print_list))
     while not board.is_game_over():
         board.grid = board.get_new_state(board.grid, board.make_player_turn())
         grid_copy = copy.deepcopy(board.grid)
         new_minimax = board.minimax(board.grid, 0)
         board.player_turn, board.ai_turn = board.ai_turn, board.player_turn
+        print(new_minimax[1])
         board.grid = board.get_new_state(grid_copy, new_minimax[1])
         board.player_turn, board.ai_turn = board.ai_turn, board.player_turn
-        grid_print_list = [row[i] for row in board.grid for i in [0, 1, 2]]
+        grid_print_list = [row[i] for row in board.grid for i in range(Board.ROW_LEN)]
         print(Board.grid_str.format(*grid_print_list))
         if board.game_win(board.grid, Board.PLAYER):
             print("Congratulations! You win!")
