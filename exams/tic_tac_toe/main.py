@@ -31,7 +31,7 @@ class Board:
 
     def minimax(self, grid, depth):
         if self.is_game_over():
-            return [self.score(grid, depth), [-1, -1]]
+            return self.score(grid, depth)
 
         depth += 1
         scores = []
@@ -39,17 +39,20 @@ class Board:
 
         for move in self.get_empty_spots(grid):
             possible_game = self.get_new_state(grid, move)
-            scores.append(self.minimax(possible_game, depth)[0])
+            if self.game_win(possible_game, Board.AI) or self.game_win(possible_game, Board.PLAYER):
+                return move
+
+            scores.append(self.score(possible_game, depth))
             moves.append(move)
 
         if self.player_turn:
             max_score_index = scores.index(max(scores))
-            choice = moves[max_score_index]
-            return [scores[max_score_index], choice]
+            move = moves[max_score_index]
+            return move
         else:
             min_score_index = scores.index(min(scores))
-            choice = moves[min_score_index]
-            return [scores[min_score_index], choice]
+            move = moves[min_score_index]
+            return move
 
     def game_win(self, grid, participant):
         for row in grid:
@@ -105,8 +108,8 @@ def main():
         grid_copy = copy.deepcopy(board.grid)
         new_minimax = board.minimax(board.grid, 0)
         board.player_turn, board.ai_turn = board.ai_turn, board.player_turn
-        print(new_minimax[1])
-        board.grid = board.get_new_state(grid_copy, new_minimax[1])
+        print(new_minimax)
+        board.grid = board.get_new_state(grid_copy, new_minimax)
         board.player_turn, board.ai_turn = board.ai_turn, board.player_turn
         grid_print_list = [row[i] for row in board.grid for i in range(Board.ROW_LEN)]
         print(Board.grid_str.format(*grid_print_list))

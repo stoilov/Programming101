@@ -65,7 +65,7 @@ class BoardTest(unittest.TestCase):
         self.assertFalse(self.board.is_game_over())
 
     def test_minimax(self):
-        self.assertEqual(self.board.minimax(self.board.grid, 0), [9, [0, 1]])
+        self.assertListEqual(self.board.minimax(self.board.grid, 0), [0, 2])
 
 if __name__ == '__main__':
     unittest.main()
