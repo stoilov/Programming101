@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Search Engine Results</title>
+	<style>
+		body {
+		    background-color: #FFFFCC;
+		}
+		h1, h2 {
+		    color: maroon;
+		    margin-left: 40px;
+		}
+		.small_link {
+			font-size: 12px;
+		}
+		#heading {
+			text-decoration: none;
+		}
+	</style>	
+</head>
+<body>
+	<a href="/" id="heading"><h1>HackBulgaria Search Engine</h1></a>
+	<h2>Results for "{{ keywords }}"</h2>
+	<ul>
+	{% for link in links %}
+	<li><a href="{{ link['url'] }}">{{ link['title'] }}</a>
+		<div class="small_link">{{ link['url'] }}</div>
+		<p>{{ link['desc'] }}</p>
+	</li>
+	{% endfor %}
+	</ul>
+</body>
+</html>
