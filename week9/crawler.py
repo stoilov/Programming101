@@ -38,8 +38,6 @@ class Crawler:
 
         self.save_info_to_database(soup, url)
 
-        #  To do: save to database
-
         for page in pages:
             new_link = self.parse_url(url, page)
             if self.can_be_scanned(new_link, url):
